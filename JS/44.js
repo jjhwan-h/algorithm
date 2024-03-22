@@ -1,3 +1,14 @@
+/**
+ * @file 44.js
+ * @author jang jeong hwan (you@domain.com)
+ * @brief 
+ * @version 0.1
+ * @date 2024-03-11
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
+
 const fs = require('fs');
 const readline = require('readline');
 
