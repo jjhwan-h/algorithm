@@ -1,3 +1,13 @@
+/**
+ * @file 45.js
+ * @author jang jeong hwan (you@domain.com)
+ * @brief 후위식연산(스택)
+ * @version 0.1
+ * @date 2024-03-11
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
 const fs = require('fs');
 const readline = require('readline');
 
@@ -19,7 +29,7 @@ const Postfix = (input)=>{
     for(el of input){
         if(/[0-9]/.test(parseInt(el,10))){ //0-9를 찾는 정규표현식
             stack.push(Number(el));
-        } 
+        }
         else {
             let res=0;
             const post = stack.pop();
