@@ -19,12 +19,6 @@ type pos struct {
 var N int
 
 func main() {
-	// file, err := os.Open("./1002.txt")
-	// if err != nil {
-	// 	fmt.Println("can'not open file", err)
-	// }
-	// defer file.Close()
-
 	reader := bufio.NewReader(os.Stdin)
 	writer := bufio.NewWriter(os.Stdout)
 	defer writer.Flush()
