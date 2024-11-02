@@ -23,7 +23,7 @@ const (
 	CUBESIZE int = 31
 )
 
-func BFS(building *[CUBESIZE][CUBESIZE][CUBESIZE]rune, queue [][4]int) (int, bool) {
+func BFS(building *[CUBESIZE][CUBESIZE][CUBESIZE]byte, queue [][4]int) (int, bool) {
 	var visited [CUBESIZE][CUBESIZE][CUBESIZE]int
 	min := 2147000000
 	isExited := false
@@ -53,16 +53,16 @@ func BFS(building *[CUBESIZE][CUBESIZE][CUBESIZE]rune, queue [][4]int) (int, boo
 	return min, isExited
 }
 
-func Input(building *[CUBESIZE][CUBESIZE][CUBESIZE]rune) [][4]int {
+func Input(building *[CUBESIZE][CUBESIZE][CUBESIZE]byte) [][4]int {
 	queue := make([][4]int, 0, 10)
 	var str string
 	for i := 1; i <= L; i++ {
 		for j := 1; j <= R; j++ {
 			fmt.Fscan(io.reader, &str)
-			for k, c := range str {
-				(*building)[i][j][k+1] = c
-				if str[k] == 'S' {
-					queue = append(queue, [4]int{i, j, k + 1, 0})
+			for k := 1; k <= C; k++ {
+				(*building)[i][j][k] = str[k-1]
+				if str[k-1] == 'S' {
+					queue = append(queue, [4]int{i, j, k, 0})
 				}
 			}
 		}
@@ -77,7 +77,7 @@ func Solve() {
 		if L == 0 && R == 0 && C == 0 {
 			break
 		}
-		var building [CUBESIZE][CUBESIZE][CUBESIZE]rune
+		var building [CUBESIZE][CUBESIZE][CUBESIZE]byte
 		queue := Input(&building)
 		res, isExited := BFS(&building, queue)
 		if isExited {
