@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"sort"
 	"strconv"
 )
 
@@ -12,11 +13,10 @@ var (
 	writer  = bufio.NewWriter(os.Stdout)
 	N, M, K int
 
-	dx      = [4]int{0, 0, 1, -1}
-	dy      = [4]int{1, -1, 0, 0}
-	m       = [101][101]int{}
-	visited = [101][101]bool{}
-	queue   = []pos{}
+	dx    = [4]int{0, 0, 1, -1}
+	dy    = [4]int{1, -1, 0, 0}
+	m     = [101][101]bool{}
+	queue = []pos{}
 )
 
 type pos struct {
@@ -40,65 +40,53 @@ func main() {
 		for i := 0; i < M; i++ {
 			for j := 0; j < N; j++ {
 				if i >= ly && i < ry && j >= lx && j < rx {
-					m[i][j] = 1
+					m[i][j] = true
 				}
 			}
 		}
 	}
 
+	var cnt int
+	var areas []int
 	for i := 0; i < M; i++ {
 		for j := 0; j < N; j++ {
-			if m[i][j] != 1 {
+			if !m[i][j] {
+				m[i][j] = true
 				queue = append(queue, pos{i, j})
+				areas = append(areas, bfs())
+				cnt++
 			}
 		}
 	}
 
+	sort.Slice(areas, func(i, j int) bool {
+		return areas[i] < areas[j]
+	})
+
+	fmt.Fprintln(writer, cnt)
+	for _, v := range areas {
+		fmt.Fprint(writer, v, " ")
+	}
+}
+
+func bfs() int {
+	area := 1
 	//빈 구역 체크
 	for len(queue) != 0 {
 		p := queue[0]
 		queue = queue[1:]
 
-		if m[p.y][p.x] == 1 || m[p.y][p.x] == 2 {
-			continue
-		} else {
-			m[p.y][p.x] = 2
-		}
-
 		for i := range 4 {
 			ny := p.y + dy[i]
 			nx := p.x + dx[i]
-
-			if ny >= 0 && ny < M && nx >= 0 && ny < N && m[ny][nx] == 0 {
-				m[ny][nx] = 2
+			if ny >= 0 && ny < M && nx >= 0 && nx < N && !m[ny][nx] {
+				m[ny][nx] = true
 				queue = append(queue, pos{ny, nx})
+				area++
 			}
 		}
 	}
-
-	for i := 0; i < M; i++ {
-		for j := 0; j < N; j++ {
-			if m[i][j] == 2 {
-				fmt.Fprint(writer, dfs(i, j), " ")
-			}
-		}
-	}
-}
-
-func dfs(y, x int) int {
-	if visited[y][x] {
-		return -1
-	}
-
-	for i := range 4 {
-		ny := dy[i] + y
-		nx := dx[i] + x
-
-		if ny >= 0 && ny < M && nx >= 0 && ny < N && m[ny][nx] == 0 {
-			visited[ny][nx] = true
-			dfs(ny, nx)
-		}
-	}
+	return area
 }
 
 func scanInt() int {
